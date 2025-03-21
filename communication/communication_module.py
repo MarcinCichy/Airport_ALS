@@ -1,6 +1,8 @@
 class AirTrafficControlServer:
-    def __init__(selfself, host, port):
-        pass
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+
 
     async def start_server(self):
         pass
