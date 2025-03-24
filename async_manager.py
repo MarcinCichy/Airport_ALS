@@ -1,4 +1,3 @@
-
 import asyncio
 from communication.communication_module import AirTrafficControlServer, AirTrafficController
 
