@@ -9,7 +9,7 @@ def load_config():
     Jeśli zmienna środowiskowa TEST_ENV jest ustawiona na 'test',
     można użyć innego pliku (np. test_database.ini) – tutaj przykładowo używamy config.ini.
     """
-    config_file = 'config.ini'
+    config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.ini')
     parser = ConfigParser()
     read_files = parser.read(config_file)
     if not read_files:
