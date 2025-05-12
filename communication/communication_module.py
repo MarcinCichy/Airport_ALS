@@ -1,7 +1,10 @@
+from config import get_constants
+
 class AirTrafficControlServer:
-    def __init__(self, host, port):
-        self.host = host
-        self.port = port
+    def __init__(self, host=None, port=None):
+        constants = get_constants()
+        self.host = constants['HOST']
+        self.port = constants['PORT']
 
 
     async def start_server(self):

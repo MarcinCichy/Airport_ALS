@@ -1,5 +1,6 @@
 # config.py
 import os
+import ast
 from configparser import ConfigParser
 
 
@@ -27,6 +28,7 @@ def get_constants():
       - FUEL_DURATION
       - HOST
       - PORT
+      - ENCODING
     """
     config = load_config()
 
@@ -36,11 +38,17 @@ def get_constants():
 
     # AIRSPACE_DIMENSIONS może być zapisany jako ciąg znaków "(10000,10000,5000)"
     dims_str = config.get('settings', 'AIRSPACE_DIMENSIONS', fallback="(10000,10000,5000)")
-    # Używamy eval, aby przekształcić ciąg w krotkę – w produkcji warto rozważyć bezpieczniejsze rozwiązanie
-    constants['AIRSPACE_DIMENSIONS'] = eval(dims_str)
+    try:
+        dims = ast.literal_eval(dims_str)
+        if (not isinstance(dims, tuple)) or len(dims) !=3:
+            raise ValueError("AIRSPACE_DIMENSIONS musi być krotką 3 wartości")
+        constants['AIRSPACE_DIMENSIONS'] = dims
+    except (ValueError, SyntaxError) as e:
+        raise ValueError(f"Nieprawidłowy format AIRSPACE_DIMENSIONS: {dims_str} ") from e
 
     constants['COLLISION_DISTANCE'] = config.getint('settings', 'COLLISION_DISTANCE', fallback=10)
     constants['FUEL_DURATION'] = config.getint('settings', 'FUEL_DURATION', fallback=10800)
     constants['HOST'] = config.get('settings', 'HOST', fallback='127.0.0.1')
     constants['PORT'] = config.getint('settings', 'PORT', fallback=8000)
+    constants['ENCODE_FORMAT'] = config.getint('settings', 'ENCODE_FORMAT', fallback='utf-8')
     return constants
